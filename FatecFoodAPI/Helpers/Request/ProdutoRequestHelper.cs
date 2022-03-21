@@ -16,8 +16,7 @@ namespace FatecFoodAPI.Helpers.Request
         [Range(0.0, double.MaxValue, ErrorMessage = "Preco must be greater than 0")]
         public double Preco { get; set; }
         
-        [Required(ErrorMessage = "CategoriaId is required")]
-        [MaxLength(250, ErrorMessage = "CategoriaId must be less than 250 characters")]
+        [MaxLength(250, ErrorMessage = "Observacoes must be less than 250 characters")]
         public string Observacoes { get; set; }
 
         [ForeignKey("Categorias")]
