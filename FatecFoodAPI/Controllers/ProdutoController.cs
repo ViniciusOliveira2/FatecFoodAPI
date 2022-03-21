@@ -30,6 +30,8 @@ namespace FatecFoodAPI.Controllers
             _context.Produtos.Add(payload);
             _context.SaveChanges();
 
+
+
             return StatusCode(200, payload);
         }
 

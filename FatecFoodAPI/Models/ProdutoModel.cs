@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FatecFoodAPI.Models
 {
@@ -10,6 +11,11 @@ namespace FatecFoodAPI.Models
         public string Nome { get; set; } 
 
         public double Preco { get; set; }
+
+        [ForeignKey("Categorias")]
+        public int CategoriaId { get; set; }
+
+        public CategoriaModel Categoria { get; set; }
 
         // atributo imagem
 

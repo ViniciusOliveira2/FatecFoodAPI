@@ -9,5 +9,7 @@ namespace FatecFoodAPI.Models
 
         [Required]
         public string Nome { get; set; }
+
+        public List<ProdutoModel> Produtos { get; set; }
     }
 }
