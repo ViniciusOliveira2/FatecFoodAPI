@@ -45,10 +45,6 @@ namespace FatecFoodAPI.Migrations
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("longtext");

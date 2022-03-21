@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FatecFoodAPI.Migrations
 {
-    public partial class CategoriaProduto : Migration
+    public partial class CategoriProduto : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,11 +29,9 @@ namespace FatecFoodAPI.Migrations
                     Nome = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Preco = table.Column<double>(type: "double", nullable: false),
-                    CategoriaId = table.Column<int>(type: "int", nullable: false),
-                    Descricao = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Observacoes = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    CategoriaId = table.Column<int>(type: "int", nullable: false),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>

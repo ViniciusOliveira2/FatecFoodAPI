@@ -1,4 +1,7 @@
-﻿using FatecFoodAPI.Database;
+﻿using System.Net;
+using FatecFoodAPI.Database;
+using FatecFoodAPI.Helpers;
+using FatecFoodAPI.Helpers.Request;
 using FatecFoodAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,12 +28,37 @@ namespace FatecFoodAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Insert([FromBody] CategoriaModel payload)
+        public ActionResult Insert([FromBody] CategoriaRequest payload)
         {
-            _context.Categorias.Add(payload);
-            _context.SaveChanges();
+            var response = new DefaultResponse()
+            {
+                Code = (int) HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
 
-            return StatusCode(200, payload);
+            try
+            {
+
+                CategoriaModel model = new CategoriaModel()
+                {
+                    Nome = payload.Nome
+                };
+
+                _context.Categorias.Add(model);
+                _context.SaveChanges();
+
+                response.Message = "Categoria was successfully inserted";
+                response.Code = (int) HttpStatusCode.OK;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception err)
+            {
+                response.Error = err;
+                response.Message = "An error occurred while trying to insert a new categoria";
+
+                return StatusCode(response.Code, response);
+            }
         }
 
         [HttpPut]

@@ -1,6 +1,10 @@
-﻿using FatecFoodAPI.Database;
+﻿using System.Net;
+using FatecFoodAPI.Database;
+using FatecFoodAPI.Helpers;
+using FatecFoodAPI.Helpers.Request;
 using FatecFoodAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FatecFoodAPI.Controllers
 {
@@ -20,19 +24,52 @@ namespace FatecFoodAPI.Controllers
         {
             var code = 200;
             var data = _context.Produtos.ToList();
-
+            
             return StatusCode(code, data);
         }
 
         [HttpPost]
-        public ActionResult Insert([FromBody] ProdutoModel payload)
+        public ActionResult Insert([FromBody] ProdutoRequest payload)
         {
-            _context.Produtos.Add(payload);
-            _context.SaveChanges();
+            var response = new DefaultResponse()
+            {
+                Code = (int) HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
 
+            try
+            {
+                var categoria = _context.Categorias.FirstOrDefault(x => x.Id == payload.CategoriaId);
 
+                if (categoria == null)
+                {
+                    response.Code = (int) HttpStatusCode.BadRequest;
+                    response.Message = "Categoria was not found";
+                }
 
-            return StatusCode(200, payload);
+                ProdutoModel model = new ProdutoModel()
+                {
+                    Nome = payload.Nome,
+                    Preco = payload.Preco,
+                    Observacoes = payload.Observacoes,
+                    CategoriaId = payload.CategoriaId
+                };
+
+                _context.Produtos.Add(model);
+                _context.SaveChanges();
+
+                response.Message = "Produto was successfully inserted";
+                response.Code = (int) HttpStatusCode.OK;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception err)
+            {
+                response.Error = err.Message;
+                response.Message = "An error occurred while trying to insert a new produto";
+
+                return StatusCode(response.Code, response);
+            }
         }
 
         [HttpPut]
@@ -47,7 +84,6 @@ namespace FatecFoodAPI.Controllers
 
             produto.Nome = payload.Nome;
             produto.Preco = payload.Preco;
-            produto.Descricao = payload.Descricao;
             produto.Observacoes = payload.Observacoes;
             produto.Ativo = payload.Ativo;
 
