@@ -12,13 +12,13 @@ namespace FatecFoodAPI.Models
 
         public double Preco { get; set; }
 
-        public string Observacoes { get; set; }
-
         [ForeignKey("Categorias")]
         public int CategoriaId { get; set; }
 
         public CategoriaModel Categoria { get; set; }
 
         public bool Ativo { get; set; }
+
+        public List<AdicionalModel> Adicional { get; set; }
     }
 }
