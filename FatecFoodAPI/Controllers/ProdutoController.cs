@@ -51,7 +51,6 @@ namespace FatecFoodAPI.Controllers
                 {
                     Nome = payload.Nome,
                     Preco = payload.Preco,
-                    Observacoes = payload.Observacoes,
                     CategoriaId = payload.CategoriaId
                 };
 
@@ -84,7 +83,6 @@ namespace FatecFoodAPI.Controllers
 
             produto.Nome = payload.Nome;
             produto.Preco = payload.Preco;
-            produto.Observacoes = payload.Observacoes;
             produto.Ativo = payload.Ativo;
 
             _context.SaveChanges();
