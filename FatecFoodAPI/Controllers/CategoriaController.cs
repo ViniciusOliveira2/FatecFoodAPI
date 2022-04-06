@@ -72,10 +72,18 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
+                var restaurante = _context.Restaurantes.FirstOrDefault(x => x.Id == payload.RestauranteId);
+
+                if (restaurante == null)
+                {
+                    response.Code = (int) HttpStatusCode.BadRequest;
+                    response.Message = "Restaurante was not found";
+                }
 
                 CategoriaModel model = new CategoriaModel()
                 {
-                    Nome = payload.Nome
+                    Nome = payload.Nome,
+                    RestauranteId = payload.RestauranteId
                 };
 
                 _context.Categorias.Add(model);

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FatecFoodAPI.Helpers.Request
 {
@@ -9,5 +10,9 @@ namespace FatecFoodAPI.Helpers.Request
 
         [Required]
         public string Nome { get; set; }
-    }   
+
+        [ForeignKey("Restaurantes")]
+        public int RestauranteId { get; set; }
+
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FatecFoodAPI.Models
 {
@@ -11,5 +12,10 @@ namespace FatecFoodAPI.Models
         public string Nome { get; set; }
 
         public List<ProdutoModel> Produtos { get; set; }
+
+        [ForeignKey("Restaurantes")]
+        public int RestauranteId { get; set; }
+
+        public RestauranteModel Restaurante { get; set; }
     }
 }
