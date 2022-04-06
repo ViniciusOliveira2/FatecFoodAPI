@@ -4,6 +4,7 @@ using FatecFoodAPI.Helpers;
 using FatecFoodAPI.Helpers.Request;
 using FatecFoodAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FatecFoodAPI.Controllers
 {
@@ -21,10 +22,43 @@ namespace FatecFoodAPI.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
-            var code = 200;
-            var data = _context.Categorias.ToList();
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
 
-            return StatusCode(code, data);
+            try
+            {
+                var query = _context.Categorias
+                    .Include(x => x.Produtos)    
+                    .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Produtos = x.Produtos.Select(y => new
+                    {
+                        Id = y.Id,
+                        Nome = y.Nome,
+                        Preco = y.Preco
+                    })
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Produtos encontrados";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+                return StatusCode(response.Code, response);
+            }
         }
 
         [HttpPost]
