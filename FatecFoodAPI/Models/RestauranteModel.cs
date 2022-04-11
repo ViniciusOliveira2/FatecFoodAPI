@@ -13,5 +13,7 @@ namespace FatecFoodAPI.Models
         public string Senha { get; set; }
 
         public List<CategoriaModel> Categorias { get; set; }
+
+        public List<ComandaModel> Comandas { get; set; }
     }
 }

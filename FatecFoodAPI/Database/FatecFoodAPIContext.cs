@@ -19,5 +19,7 @@ namespace FatecFoodAPI.Database
 
         public DbSet<RestauranteModel> Restaurantes { get; set; }
 
+        public DbSet<ComandaModel> Comandas { get; set; }
+
     }
 }
