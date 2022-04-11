@@ -104,7 +104,7 @@ namespace FatecFoodAPI.Controllers
         }
 
         [HttpPut]
-        public ActionResult Update([FromQuery] int id, [FromBody] CategoriaModel payload)
+        public ActionResult Update([FromQuery] int id, [FromBody] CategoriaRequest payload)
         {
             var categoria = _context.Categorias.FirstOrDefault(x => x.Id == id);
 

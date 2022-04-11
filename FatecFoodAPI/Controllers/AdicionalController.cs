@@ -71,7 +71,7 @@ namespace FatecFoodAPI.Controllers
         }
 
         [HttpPut]
-        public ActionResult Update([FromQuery] int id, [FromBody] AdicionalModel payload)
+        public ActionResult Update([FromQuery] int id, [FromBody] AdicionalRequest payload)
         {
             var adicional = _context.Adicionais.FirstOrDefault(x => x.Id == id);
 

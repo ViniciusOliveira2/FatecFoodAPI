@@ -62,7 +62,7 @@ namespace FatecFoodAPI.Controllers
         }
 
         [HttpPut]
-        public ActionResult Update([FromQuery] int id, [FromBody] RestauranteModel payload)
+        public ActionResult Update([FromQuery] int id, [FromBody] RestauranteRequest payload)
         {
             var restaurante = _context.Restaurantes.FirstOrDefault(x => x.Id == id);
 

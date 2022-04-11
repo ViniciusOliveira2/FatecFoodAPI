@@ -19,13 +19,43 @@ namespace FatecFoodAPI.Controllers
             _context = context;
         }
 
-        [HttpGet] 
+        [HttpGet]
         public ActionResult GetAll()
         {
-            var code = 200;
-            var data = _context.Produtos.ToList();
-            
-            return StatusCode(code, data);
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var query = _context.Produtos
+                    .Include(x => x.Adicional)
+                    .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Preco = x.Preco,
+                    Adicional = x.Adicional.Select(y => new
+                    {
+                        Id = y.Id,
+                        Nome = y.Nome
+                    })
+                });
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Adicionais encontrados.";
+                response.Data = result;
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+                return StatusCode(response.Code, response);
+            }
         }
 
         [HttpPost]
@@ -72,7 +102,7 @@ namespace FatecFoodAPI.Controllers
         }
 
         [HttpPut]
-        public ActionResult Update([FromQuery] int id, [FromBody] ProdutoModel payload)
+        public ActionResult Update([FromQuery] int id, [FromBody] ProdutoRequest payload)
         {
             var produto = _context.Produtos.FirstOrDefault(x => x.Id == id);
 
@@ -83,7 +113,6 @@ namespace FatecFoodAPI.Controllers
 
             produto.Nome = payload.Nome;
             produto.Preco = payload.Preco;
-            produto.Ativo = payload.Ativo;
 
             _context.SaveChanges();
 
