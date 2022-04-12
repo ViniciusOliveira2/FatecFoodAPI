@@ -21,5 +21,9 @@ namespace FatecFoodAPI.Database
 
         public DbSet<ComandaModel> Comandas { get; set; }
 
+        public DbSet<ItemSelecionadoModel> ItensSelecionados { get; set; }
+
+        public DbSet<AdicionalSelecionadoModel> AdicionaisSelecionados { get; set; }
+
     }
 }

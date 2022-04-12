@@ -38,7 +38,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("Adicionais");
+                    b.ToTable("Adicionais", (string)null);
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.CategoriaModel", b =>
@@ -58,7 +58,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("RestauranteId");
 
-                    b.ToTable("Categorias");
+                    b.ToTable("Categorias", (string)null);
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.ProdutoModel", b =>
@@ -84,7 +84,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("CategoriaId");
 
-                    b.ToTable("Produtos");
+                    b.ToTable("Produtos", (string)null);
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.RestauranteModel", b =>
@@ -103,7 +103,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurantes");
+                    b.ToTable("Restaurantes", (string)null);
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.AdicionalModel", b =>

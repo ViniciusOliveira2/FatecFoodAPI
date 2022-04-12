@@ -15,5 +15,7 @@ namespace FatecFoodAPI.Models
         public int RestauranteId { get; set; }
 
         public RestauranteModel Restaurante { get; set; }
+
+        public List<ItemSelecionadoModel> ItemSelecionado { get; set; }
     }
 }
