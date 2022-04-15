@@ -38,16 +38,18 @@ namespace FatecFoodAPI.Controllers
                 {
                     Id = x.Id,
                     Nome = x.Nome,
+                    Ativo = x.Ativo,
                     Produtos = x.Produtos.Select(y => new
                     {
                         Id = y.Id,
                         Nome = y.Nome,
-                        Preco = y.Preco
+                        Preco = y.Preco,
+                        Ativo = y.Ativo
                     })
                 });
 
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = "Produtos encontrados";
+                response.Message = "Categorias found";
                 response.Data = result;
 
                 return StatusCode(response.Code, response);
@@ -57,6 +59,7 @@ namespace FatecFoodAPI.Controllers
             {
                 response.Code = (int)HttpStatusCode.InternalServerError;
                 response.Message = ex.Message;
+
                 return StatusCode(response.Code, response);
             }
         }
@@ -72,7 +75,7 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var restaurante = _context.Restaurantes.FirstOrDefault(x => x.Id == payload.RestauranteId);
+                var restaurante = _context.Restaurantes.FirstOrDefault(r => r.Id == payload.RestauranteId);
 
                 if (restaurante == null)
                 {
@@ -83,7 +86,8 @@ namespace FatecFoodAPI.Controllers
                 CategoriaModel model = new CategoriaModel()
                 {
                     Nome = payload.Nome,
-                    RestauranteId = payload.RestauranteId
+                    RestauranteId = payload.RestauranteId,
+                    Ativo = payload.Ativo
                 };
 
                 _context.Categorias.Add(model);
@@ -97,7 +101,7 @@ namespace FatecFoodAPI.Controllers
             catch (Exception err)
             {
                 response.Error = err;
-                response.Message = "An error occurred while trying to insert a new categoria";
+                response.Message = "An error occurred while trying to insert a new Categoria";
 
                 return StatusCode(response.Code, response);
             }
@@ -106,14 +110,16 @@ namespace FatecFoodAPI.Controllers
         [HttpPut]
         public ActionResult Update([FromQuery] int id, [FromBody] CategoriaRequest payload)
         {
-            var categoria = _context.Categorias.FirstOrDefault(x => x.Id == id);
+            var categoria = _context.Categorias.FirstOrDefault(c => c.Id == id);
 
             if (categoria == null)
             {
-                return StatusCode(404, "Categoria nao encontrada");
+                return StatusCode(404, "Categoria not found");
             }
 
             categoria.Nome = payload.Nome;
+            categoria.Ativo = payload.Ativo;
+
             _context.SaveChanges();
 
             return StatusCode(200, payload);
@@ -126,13 +132,13 @@ namespace FatecFoodAPI.Controllers
 
             if (categoria == null)
             {
-                return StatusCode(404, "Categoria nao encontrada");
+                return StatusCode(404, "Categoria not found");
             }
 
             _context.Categorias.Remove(categoria);
             _context.SaveChanges();
 
-            return StatusCode(200, "Categoria Removida");
+            return StatusCode(200, "Categoria removed");
         }
 
     }

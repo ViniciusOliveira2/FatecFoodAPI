@@ -3,6 +3,7 @@ using FatecFoodAPI.Helpers;
 using FatecFoodAPI.Helpers.Request;
 using FatecFoodAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace FatecFoodAPI.Controllers
@@ -21,10 +22,46 @@ namespace FatecFoodAPI.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
-            var code = 200;
-            var data = _context.Adicionais.ToList();
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
 
-            return StatusCode(code, data);
+            try
+            {
+                var query = _context.Adicionais
+                    .Include(x => x.AdicionalSelecionado)
+                    .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Ativo = x.Ativo,
+                    Preco = x.Preco,
+                    ProdutoId = x.ProdutoId,
+
+                    AdicionalSelecionado = x.AdicionalSelecionado.Select(y => new
+                    {
+                        Id = y.Id,
+                        ItemSelecionadoId = y.ItemSelecionadoId
+                    })
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Adicionais found";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
         }
 
         [HttpPost]
@@ -38,7 +75,7 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var produto = _context.Produtos.FirstOrDefault(x => x.Id == payload.ProdutoId);
+                var produto = _context.Produtos.FirstOrDefault(p => p.Id == payload.ProdutoId);
 
                 if (produto == null)
                 {
@@ -50,6 +87,7 @@ namespace FatecFoodAPI.Controllers
                 {
                     Nome = payload.Nome,
                     Ativo = payload.Ativo,
+                    Preco = payload.Preco,
                     ProdutoId = payload.ProdutoId
                 };
 
@@ -64,7 +102,7 @@ namespace FatecFoodAPI.Controllers
             catch (Exception err)
             {
                 response.Error = err.Message;
-                response.Message = "An error occurred while trying to insert a new adicional";
+                response.Message = "An error occurred while trying to insert a new Adicional";
 
                 return StatusCode(response.Code, response);
             }
@@ -73,15 +111,17 @@ namespace FatecFoodAPI.Controllers
         [HttpPut]
         public ActionResult Update([FromQuery] int id, [FromBody] AdicionalRequest payload)
         {
-            var adicional = _context.Adicionais.FirstOrDefault(x => x.Id == id);
+            var adicional = _context.Adicionais.FirstOrDefault(a => a.Id == id);
 
             if (adicional == null)
             {
-                return StatusCode(404, "Adicional nao encontrado");
+                return StatusCode(404, "Adicional not found");
             }
 
             adicional.Nome = payload.Nome;
             adicional.Ativo = payload.Ativo;
+            adicional.Preco = payload.Preco;
+            adicional.ProdutoId = payload.ProdutoId;
 
             _context.SaveChanges();
 
@@ -91,17 +131,17 @@ namespace FatecFoodAPI.Controllers
         [HttpDelete]
         public ActionResult Delete([FromQuery] int id)
         {
-            var adicional = _context.Adicionais.FirstOrDefault(x => x.Id == id);
+            var adicional = _context.Adicionais.FirstOrDefault(a => a.Id == id);
 
             if (adicional == null)
             {
-                return StatusCode(404, "Adicional nao encontrado");
+                return StatusCode(404, "Adicional not found");
             }
 
             _context.Adicionais.Remove(adicional);
             _context.SaveChanges();
 
-            return StatusCode(200, "Adicional Removido");
+            return StatusCode(200, "Adicional removed");
         }
     }
 }

@@ -3,6 +3,7 @@ using FatecFoodAPI.Helpers;
 using FatecFoodAPI.Helpers.Request;
 using FatecFoodAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace FatecFoodAPI.Controllers
@@ -21,10 +22,46 @@ namespace FatecFoodAPI.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
-            var code = 200;
-            var data = _context.ItensSelecionados.ToList();
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
 
-            return StatusCode(code, data);
+            try
+            {
+                var query = _context.ItensSelecionados
+                    .Include(x => x.AdicionalSelecionado)
+                    .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    ProdutoId = x.ProdutoId,
+                    Quantidade = x.Quantidade,
+                    Observacoes = x.Observacoes,
+                    ComandaId = x.ComandaId,
+
+                    AdicionalSelecionado = x.AdicionalSelecionado.Select(y => new
+                    {
+                        Id = y.Id,
+                        AdicionalId = y.AdicionalId
+                    })
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "ItemSelecionado found";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
         }
 
         [HttpPost]
@@ -46,7 +83,7 @@ namespace FatecFoodAPI.Controllers
                     response.Message = "Produto was not found";
                 }
 
-                var comanda = _context.Comandas.FirstOrDefault(x => x.Id == payload.ComandaId);
+                var comanda = _context.Comandas.FirstOrDefault(y => y.Id == payload.ComandaId);
 
                 if (comanda == null)
                 {
@@ -72,7 +109,7 @@ namespace FatecFoodAPI.Controllers
             } catch (Exception err)
             {
                 response.Error = err;
-                response.Message = "An error occurred while trying to insert a new itemselecionado";
+                response.Message = "An error occurred while trying to insert a new ItemSelecionado";
 
                 return StatusCode(response.Code, response);
             }
@@ -81,7 +118,7 @@ namespace FatecFoodAPI.Controllers
         [HttpPut]
         public ActionResult Update([FromQuery] int id, [FromBody] ItemSelecionadoRequest payload)
         {
-            var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(x => x.Id == id);
+            var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(i => i.Id == id);
 
             if (itemSelecionado == null)
             {
@@ -98,17 +135,17 @@ namespace FatecFoodAPI.Controllers
         [HttpDelete]
         public ActionResult Delete([FromQuery] int id)
         {
-            var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(c => c.Id == id);
+            var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(i => i.Id == id);
 
             if (itemSelecionado == null)
             {
-                return StatusCode(404, "ItemSelecionado nao encontrado");
+                return StatusCode(404, "ItemSelecionado not found");
             }
 
             _context.ItensSelecionados.Remove(itemSelecionado);
             _context.SaveChanges();
 
-            return StatusCode(200, "ItemSelecionado Removido");
+            return StatusCode(200, "ItemSelecionado removed");
         }
     }
 }

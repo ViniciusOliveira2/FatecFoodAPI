@@ -19,5 +19,7 @@ namespace FatecFoodAPI.Models
         public ProdutoModel Produto { get; set; }
 
         public List<AdicionalSelecionadoModel> AdicionalSelecionado { get; set; }
+
+        public double Preco { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using FatecFoodAPI.Helpers;
 using FatecFoodAPI.Helpers.Request;
 using FatecFoodAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace FatecFoodAPI.Controllers
@@ -21,10 +22,45 @@ namespace FatecFoodAPI.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
-            var code = 200;
-            var data = _context.Comandas.ToList();
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
 
-            return StatusCode(code, data);
+            try
+            {
+                var query = _context.Comandas
+                    .Include(x => x.ItemSelecionado)
+                    .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    NumComanda = x.NumComanda,
+                    RestauranteId = x.RestauranteId,
+                    ItemSelecionado = x.ItemSelecionado.Select(y => new
+                    {
+                        Id = y.Id,
+                        ProdutoId = y.ProdutoId,
+                        Quantidade = y.Quantidade,
+                        Observacoes = y.Observacoes
+                    })
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Comandas found";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
         }
 
         [HttpPost]
@@ -38,7 +74,7 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var restaurante = _context.Restaurantes.FirstOrDefault(x => x.Id == payload.RestauranteId);
+                var restaurante = _context.Restaurantes.FirstOrDefault(r => r.Id == payload.RestauranteId);
 
                 if (restaurante == null)
                 {
@@ -62,7 +98,7 @@ namespace FatecFoodAPI.Controllers
             } catch (Exception err)
             {
                 response.Error = err;
-                response.Message = "An error occurred while trying to insert a new comanda";
+                response.Message = "An error occurred while trying to insert a new Comanda";
 
                 return StatusCode(response.Code, response);
             }
@@ -71,14 +107,15 @@ namespace FatecFoodAPI.Controllers
         [HttpPut]
         public ActionResult Update([FromQuery] int id, [FromBody] ComandaRequest payload)
         {
-            var comanda = _context.Comandas.FirstOrDefault(x => x.Id == id);
+            var comanda = _context.Comandas.FirstOrDefault(c => c.Id == id);
 
             if (comanda == null)
             {
-                return StatusCode(404, "Comanda nao encontrada");
+                return StatusCode(404, "Comanda not found");
             }
 
             comanda.NumComanda = payload.NumComanda;
+
             _context.SaveChanges();
 
             return StatusCode(200, payload);
@@ -91,13 +128,13 @@ namespace FatecFoodAPI.Controllers
 
             if (comanda == null)
             {
-                return StatusCode(404, "Comanda nao encontrada");
+                return StatusCode(404, "Comanda not found");
             }
 
             _context.Comandas.Remove(comanda);
             _context.SaveChanges();
 
-            return StatusCode(200, "Comanda Removida");
+            return StatusCode(200, "Comanda removed");
         }
     }
 }

@@ -37,13 +37,16 @@ namespace FatecFoodAPI.Controllers
                 var result = query.Select(x => new
                 {
                     Id = x.Id,
-                    Nome = x.Login,
+                    Login = x.Login,
                     Senha = x.Senha,
+                    Nome = x.Nome,
+
                     Categorias = x.Categorias.Select(y => new
                     {
                         Id = y.Id,
                         Nome = y.Nome
                     }),
+
                     Comandas = x.Comandas.Select(z => new
                     {
                         Id = z.Id,
@@ -52,7 +55,7 @@ namespace FatecFoodAPI.Controllers
                 });
 
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = "Restaurantes encontrados";
+                response.Message = "Restaurantes found";
                 response.Data = result;
 
                 return StatusCode(response.Code, response);
@@ -60,6 +63,7 @@ namespace FatecFoodAPI.Controllers
             {
                 response.Code = (int)HttpStatusCode.InternalServerError;
                 response.Message = ex.Message;
+
                 return StatusCode(response.Code, response);
             }
         }
@@ -78,7 +82,8 @@ namespace FatecFoodAPI.Controllers
                 RestauranteModel model = new RestauranteModel()
                 {
                     Login = payload.Login,
-                    Senha = payload.Senha
+                    Senha = payload.Senha,
+                    Nome = payload.Nome
                 };
 
                 _context.Restaurantes.Add(model);
@@ -92,7 +97,7 @@ namespace FatecFoodAPI.Controllers
             catch (Exception err)
             {
                 response.Error = err;
-                response.Message = "An error occurred while trying to insert a new restaurante";
+                response.Message = "An error occurred while trying to insert a new Restaurante";
 
                 return StatusCode(response.Code, response);
             }
@@ -101,15 +106,17 @@ namespace FatecFoodAPI.Controllers
         [HttpPut]
         public ActionResult Update([FromQuery] int id, [FromBody] RestauranteRequest payload)
         {
-            var restaurante = _context.Restaurantes.FirstOrDefault(x => x.Id == id);
+            var restaurante = _context.Restaurantes.FirstOrDefault(r => r.Id == id);
 
             if (restaurante == null)
             {
-                return StatusCode(404, "Restaurante nao encontrado");
+                return StatusCode(404, "Restaurante not found");
             }
 
             restaurante.Login = payload.Login;
             restaurante.Senha = payload.Senha;
+            restaurante.Nome = payload.Nome;
+
             _context.SaveChanges();
 
             return StatusCode(200, payload);
@@ -118,17 +125,17 @@ namespace FatecFoodAPI.Controllers
         [HttpDelete]
         public ActionResult Delete([FromQuery] int id)
         {
-            var restaurante = _context.Restaurantes.FirstOrDefault(c => c.Id == id);
+            var restaurante = _context.Restaurantes.FirstOrDefault(r => r.Id == id);
 
             if (restaurante == null)
             {
-                return StatusCode(404, "Restaurante nao encontrado");
+                return StatusCode(404, "Restaurante not found");
             }
 
             _context.Restaurantes.Remove(restaurante);
             _context.SaveChanges();
 
-            return StatusCode(200, "Restaurante Removido");
+            return StatusCode(200, "Restaurante removed");
         }
     }
 }

@@ -9,7 +9,7 @@ namespace FatecFoodAPI.Helpers.Request
         public int Id { get; set; } 
 
         [Required(ErrorMessage = "Nome is required")]
-        [MaxLength(100, ErrorMessage = "Nome must be less than 100 characters")]
+        [MaxLength(30, ErrorMessage = "Nome must be less than 30 characters")]
         public string Nome { get; set; } 
 
         [Required(ErrorMessage = "Preco is required")]
@@ -17,6 +17,9 @@ namespace FatecFoodAPI.Helpers.Request
         public double Preco { get; set; }
 
         [ForeignKey("Categorias")]
+        [Required(ErrorMessage = "CategoriaId is required")]
         public int CategoriaId { get; set; }
+
+        public bool Ativo { get; set; }
     }
 }

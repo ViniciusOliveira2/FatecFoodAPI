@@ -38,7 +38,7 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(x => x.Id == payload.ItemSelecionadoId);
+                var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(i => i.Id == payload.ItemSelecionadoId);
 
                 if (itemSelecionado == null)
                 {
@@ -46,7 +46,7 @@ namespace FatecFoodAPI.Controllers
                     response.Message = "ItemSelecionado was not found";
                 }
 
-                var adicional = _context.Adicionais.FirstOrDefault(x => x.Id == payload.AdicionalId);
+                var adicional = _context.Adicionais.FirstOrDefault(a => a.Id == payload.AdicionalId);
 
                 if (adicional == null)
                 {
@@ -70,7 +70,7 @@ namespace FatecFoodAPI.Controllers
             } catch (Exception err)
             {
                 response.Error = err;
-                response.Message = "An error occurred while trying to insert a new adicionalselecionado";
+                response.Message = "An error occurred while trying to insert a new AdicionalSelecionado";
 
                 return StatusCode(response.Code, response);
             }
@@ -83,7 +83,7 @@ namespace FatecFoodAPI.Controllers
 
             if (adicioanlSelecionado == null)
             {
-                return StatusCode(404, "AdicionalSelecionado nao encontrado");
+                return StatusCode(404, "AdicionalSelecionado not found");
             }
 
             _context.SaveChanges();
@@ -98,13 +98,13 @@ namespace FatecFoodAPI.Controllers
 
             if (adicioanlSelecionado == null)
             {
-                return StatusCode(404, "AdicionalSelecionado nao encontrado");
+                return StatusCode(404, "AdicionalSelecionado not found");
             }
 
             _context.AdicionaisSelecionados.Remove(adicioanlSelecionado);
             _context.SaveChanges();
 
-            return StatusCode(200, "ItemSelecionado Removido");
+            return StatusCode(200, "ItemSelecionado removed");
         }
     }
 }

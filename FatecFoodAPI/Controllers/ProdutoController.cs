@@ -39,21 +39,26 @@ namespace FatecFoodAPI.Controllers
                     Id = x.Id,
                     Nome = x.Nome,
                     Preco = x.Preco,
+                    Ativo = x.Ativo,
                     Adicional = x.Adicional.Select(y => new
                     {
                         Id = y.Id,
-                        Nome = y.Nome
+                        Nome = y.Nome,
+                        Ativo = y.Ativo,
+                        Preco = y.Preco
                     })
                 });
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = "Adicionais encontrados.";
+                response.Message = "Produtos found.";
                 response.Data = result;
+
                 return StatusCode(response.Code, response);
             }
             catch (Exception ex)
             {
                 response.Code = (int)HttpStatusCode.InternalServerError;
                 response.Message = ex.Message;
+
                 return StatusCode(response.Code, response);
             }
         }
@@ -69,7 +74,7 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var categoria = _context.Categorias.FirstOrDefault(x => x.Id == payload.CategoriaId);
+                var categoria = _context.Categorias.FirstOrDefault(c => c.Id == payload.CategoriaId);
 
                 if (categoria == null)
                 {
@@ -81,6 +86,7 @@ namespace FatecFoodAPI.Controllers
                 {
                     Nome = payload.Nome,
                     Preco = payload.Preco,
+                    Ativo = payload.Ativo,
                     CategoriaId = payload.CategoriaId
                 };
 
@@ -95,7 +101,7 @@ namespace FatecFoodAPI.Controllers
             catch (Exception err)
             {
                 response.Error = err.Message;
-                response.Message = "An error occurred while trying to insert a new produto";
+                response.Message = "An error occurred while trying to insert a new Produto";
 
                 return StatusCode(response.Code, response);
             }
@@ -104,15 +110,17 @@ namespace FatecFoodAPI.Controllers
         [HttpPut]
         public ActionResult Update([FromQuery] int id, [FromBody] ProdutoRequest payload)
         {
-            var produto = _context.Produtos.FirstOrDefault(x => x.Id == id);
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == id);
 
             if (produto == null)
             {
-                return StatusCode(404, "Produto nao encontrado");
+                return StatusCode(404, "Produto not found");
             }
 
             produto.Nome = payload.Nome;
             produto.Preco = payload.Preco;
+            produto.CategoriaId = payload.CategoriaId;
+            produto.Ativo = payload.Ativo;
 
             _context.SaveChanges();
 
@@ -122,17 +130,17 @@ namespace FatecFoodAPI.Controllers
         [HttpDelete]
         public ActionResult Delete([FromQuery] int id)
         {
-            var produto = _context.Produtos.FirstOrDefault(x => x.Id == id);
+            var produto = _context.Produtos.FirstOrDefault(p => p.Id == id);
 
             if (produto == null)
             {
-                return StatusCode(404, "Produto nao encontrado");
+                return StatusCode(404, "Produto not found");
             }
 
             _context.Produtos.Remove(produto);
             _context.SaveChanges();
 
-            return StatusCode(200, "Produto Removido");
+            return StatusCode(200, "Produto removed");
         }
     }
 }
