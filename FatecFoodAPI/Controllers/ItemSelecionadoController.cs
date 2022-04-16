@@ -79,6 +79,7 @@ namespace FatecFoodAPI.Controllers
                 {
                     response.Code = (int) HttpStatusCode.BadRequest;
                     response.Message = "Produto was not found";
+
                     return StatusCode(response.Code, response);
                 }
 
@@ -86,6 +87,7 @@ namespace FatecFoodAPI.Controllers
                 {
                     response.Code = (int)HttpStatusCode.BadRequest;
                     response.Message = "Comanda was not found";
+
                     return StatusCode(response.Code, response);
                 }
 

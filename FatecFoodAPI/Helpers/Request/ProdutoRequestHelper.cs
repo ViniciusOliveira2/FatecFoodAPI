@@ -21,5 +21,7 @@ namespace FatecFoodAPI.Helpers.Request
         public int CategoriaId { get; set; }
 
         public bool Ativo { get; set; }
+
+        public string Imagem { get; set; }
     }
 }

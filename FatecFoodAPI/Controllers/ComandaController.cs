@@ -74,13 +74,13 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var restaurante = _context.Restaurantes.FirstOrDefault(r => r.Id == payload.RestauranteId);
-
-                if (restaurante == null)
+                if (!_context.Restaurantes.Any(c => c.Id == payload.RestauranteId))
                 {
                     response.Code = (int)HttpStatusCode.BadRequest;
                     response.Message = "Restaurante was not found";
-                };
+
+                    return StatusCode(response.Code, response);
+                }
 
                 ComandaModel model = new ComandaModel()
                 {

@@ -38,20 +38,20 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(i => i.Id == payload.ItemSelecionadoId);
-
-                if (itemSelecionado == null)
+                if (!_context.ItensSelecionados.Any(c => c.Id == payload.ItemSelecionadoId))
                 {
                     response.Code = (int)HttpStatusCode.BadRequest;
                     response.Message = "ItemSelecionado was not found";
+
+                    return StatusCode(response.Code, response);
                 }
 
-                var adicional = _context.Adicionais.FirstOrDefault(a => a.Id == payload.AdicionalId);
-
-                if (adicional == null)
+                if (!_context.Adicionais.Any(c => c.Id == payload.AdicionalId))
                 {
                     response.Code = (int)HttpStatusCode.BadRequest;
                     response.Message = "Adicional was not found";
+
+                    return StatusCode(response.Code, response);
                 }
 
                 AdicionalSelecionadoModel model = new AdicionalSelecionadoModel()

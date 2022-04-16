@@ -75,12 +75,12 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var produto = _context.Produtos.FirstOrDefault(p => p.Id == payload.ProdutoId);
-
-                if (produto == null)
+                if (!_context.Produtos.Any(c => c.Id == payload.ProdutoId))
                 {
                     response.Code = (int)HttpStatusCode.BadRequest;
                     response.Message = "Produto was not found";
+
+                    return StatusCode(response.Code, response);
                 }
 
                 AdicionalModel model = new AdicionalModel()
