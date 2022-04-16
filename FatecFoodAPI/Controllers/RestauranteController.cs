@@ -32,6 +32,7 @@ namespace FatecFoodAPI.Controllers
             {
                 var query = _context.Restaurantes
                     .Include(x => x.Categorias)
+                    .Include(x => x.Comandas)
                     .ToList();
 
                 var result = query.Select(x => new
@@ -40,13 +41,11 @@ namespace FatecFoodAPI.Controllers
                     Login = x.Login,
                     Senha = x.Senha,
                     Nome = x.Nome,
-
                     Categorias = x.Categorias.Select(y => new
                     {
                         Id = y.Id,
                         Nome = y.Nome
                     }),
-
                     Comandas = x.Comandas.Select(z => new
                     {
                         Id = z.Id,

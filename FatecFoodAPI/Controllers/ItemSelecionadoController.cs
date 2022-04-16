@@ -65,7 +65,7 @@ namespace FatecFoodAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Insert([FromBody] ItemSelecionadoRequest payload)
+        public async Task<ActionResult> Insert([FromBody] ItemSelecionadoRequest payload)
         {
             var response = new DefaultResponse()
             {
@@ -75,23 +75,21 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var produto = _context.Produtos.FirstOrDefault(x => x.Id == payload.ProdutoId);
-
-                if (produto == null)
+                if (!_context.Produtos.Any(key => key.Id == payload.ProdutoId))
                 {
-                    response.Code = (int)HttpStatusCode.BadRequest;
+                    response.Code = (int) HttpStatusCode.BadRequest;
                     response.Message = "Produto was not found";
+                    return StatusCode(response.Code, response);
                 }
 
-                var comanda = _context.Comandas.FirstOrDefault(y => y.Id == payload.ComandaId);
-
-                if (comanda == null)
+                if (!_context.Comandas.Any(key => key.Id == payload.ComandaId))
                 {
                     response.Code = (int)HttpStatusCode.BadRequest;
                     response.Message = "Comanda was not found";
+                    return StatusCode(response.Code, response);
                 }
 
-                ItemSelecionadoModel model = new ItemSelecionadoModel()
+                var model = new ItemSelecionadoModel()
                 {
                     ProdutoId = payload.ProdutoId,
                     Quantidade = payload.Quantidade,
@@ -100,14 +98,18 @@ namespace FatecFoodAPI.Controllers
                 };
 
                 _context.ItensSelecionados.Add(model);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
-                response.Message = "ItemSelecionado was successfully inserted";
                 response.Code = (int)HttpStatusCode.OK;
-
+                response.Message = "ItemSelecionado was successfully inserted";
+                response.Data = model;
+                
                 return StatusCode(response.Code, response);
-            } catch (Exception err)
+                
+            } 
+            catch (Exception err)
             {
+                response.Code = (int) HttpStatusCode.InternalServerError;
                 response.Error = err;
                 response.Message = "An error occurred while trying to insert a new ItemSelecionado";
 
