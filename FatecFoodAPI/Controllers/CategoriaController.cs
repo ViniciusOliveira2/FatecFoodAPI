@@ -39,6 +39,7 @@ namespace FatecFoodAPI.Controllers
                     Id = x.Id,
                     Nome = x.Nome,
                     Ativo = x.Ativo,
+                    Foto = "/Categoria/Image?Id=" + x.Id,
                     Produtos = x.Produtos.Select(y => new
                     {
                         Id = y.Id,
@@ -87,7 +88,8 @@ namespace FatecFoodAPI.Controllers
                 {
                     Nome = payload.Nome,
                     RestauranteId = payload.RestauranteId,
-                    Ativo = payload.Ativo
+                    Ativo = payload.Ativo,
+                    Imagem = payload.Imagem
                 };
 
                 _context.Categorias.Add(model);
@@ -119,6 +121,7 @@ namespace FatecFoodAPI.Controllers
 
             categoria.Nome = payload.Nome;
             categoria.Ativo = payload.Ativo;
+            categoria.Imagem = payload.Imagem;
 
             _context.SaveChanges();
 
@@ -141,5 +144,24 @@ namespace FatecFoodAPI.Controllers
             return StatusCode(200, "Categoria removed");
         }
 
+        [HttpGet("Image")]
+        public ActionResult Image([FromQuery] int id)
+        {
+            var categoria =_context.Categorias.FirstOrDefault(c => c.Id == id);
+
+            
+
+            if (categoria == null)
+            {
+                return StatusCode(404, "Categoria not found");
+            }
+
+            var base64 = categoria.Imagem;
+            base64 = base64.Replace("data:image/jpeg;base64,","").Replace("data:image/png;base64,","");
+            var bytes = Convert.FromBase64String(base64);
+            Stream stream = new MemoryStream(bytes);
+
+            return File(stream, "image/png");
+        }
     }
 }

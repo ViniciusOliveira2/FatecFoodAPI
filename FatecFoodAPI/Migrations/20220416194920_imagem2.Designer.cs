@@ -2,6 +2,7 @@
 using FatecFoodAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FatecFoodAPI.Migrations
 {
     [DbContext(typeof(FatecFoodAPIContext))]
-    partial class FatecFoodAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20220416194920_imagem2")]
+    partial class imagem2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,25 +68,6 @@ namespace FatecFoodAPI.Migrations
                     b.HasIndex("ItemSelecionadoId");
 
                     b.ToTable("AdicionaisSelecionados");
-                });
-
-            modelBuilder.Entity("FatecFoodAPI.Models.BancoImagemModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Imagem")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BancoImagens");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.CategoriaModel", b =>

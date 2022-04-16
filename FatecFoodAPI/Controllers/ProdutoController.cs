@@ -152,7 +152,17 @@ namespace FatecFoodAPI.Controllers
         {
             var produto = _context.Produtos.FirstOrDefault(p => p.Id == id);
 
+
+
+
+            if (produto == null)
+            {
+                return StatusCode(404, "Produto not found");
+            }
+
+
             var base64 = produto.Imagem;
+            base64 = base64.Replace("data:image/jpeg;base64,","").Replace("data:image/png;base64,","");
             var bytes = Convert.FromBase64String(base64);
             Stream stream = new MemoryStream(bytes);
 

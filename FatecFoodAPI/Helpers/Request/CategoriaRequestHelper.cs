@@ -18,5 +18,7 @@ namespace FatecFoodAPI.Helpers.Request
 
         public bool Ativo { get; set; }
 
+        public string Imagem { get; set; }
+
     }
 }

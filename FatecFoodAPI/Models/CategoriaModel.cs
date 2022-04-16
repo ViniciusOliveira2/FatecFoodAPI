@@ -19,5 +19,8 @@ namespace FatecFoodAPI.Models
         public RestauranteModel Restaurante { get; set; }
 
         public bool Ativo { get; set; }
+
+        public string Imagem { get; set; }
+
     }
 }

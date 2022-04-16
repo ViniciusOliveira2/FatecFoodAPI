@@ -2,6 +2,7 @@
 using FatecFoodAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FatecFoodAPI.Migrations
 {
     [DbContext(typeof(FatecFoodAPIContext))]
-    partial class FatecFoodAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20220416203932_pronto1.0")]
+    partial class pronto10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
