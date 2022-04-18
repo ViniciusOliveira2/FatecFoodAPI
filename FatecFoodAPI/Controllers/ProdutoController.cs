@@ -42,6 +42,7 @@ namespace FatecFoodAPI.Controllers
                     Preco = x.Preco,
                     Ativo = x.Ativo,
                     Foto = "/Produto/Image?Id=" + x.Id,
+                    CategoriaId = x.CategoriaId,
                     Adicional = x.Adicional.Select(y => new
                     {
                         Id = y.Id,
@@ -197,6 +198,7 @@ namespace FatecFoodAPI.Controllers
                     Preco = x.Preco,
                     Ativo = x.Ativo,
                     Foto = "/Produto/Image?Id=" + x.Id,
+                    CategoriaId = x.CategoriaId,
                     Adicional = x.Adicional.Select(y => new
                     {
                         Id = y.Id,
@@ -247,6 +249,7 @@ namespace FatecFoodAPI.Controllers
                     Preco = x.Preco,
                     Ativo = x.Ativo,
                     Foto = "/Produto/Image?Id=" + x.Id,
+                    CategoriaId = x.CategoriaId,
                     Adicional = x.Adicional.Select(y => new
                     {
                         Id = y.Id,
