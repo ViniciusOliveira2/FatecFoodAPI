@@ -10,11 +10,11 @@ namespace FatecFoodAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AdicionalController : Controller
+    public class PedidoController : Controller
     {
         private readonly FatecFoodAPIContext _context;
 
-        public AdicionalController(FatecFoodAPIContext context)
+        public PedidoController(FatecFoodAPIContext context)
         {
             _context = context;
         }
@@ -30,27 +30,26 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var query = _context.Adicionais
-                    .Include(x => x.AdicionalSelecionado)
+                var query = _context.Pedidos
+                    .Include(x => x.ItemSelecionado)
                     .ToList();
 
                 var result = query.Select(x => new
                 {
                     Id = x.Id,
-                    Nome = x.Nome,
-                    Ativo = x.Ativo,
-                    Preco = x.Preco,
-                    ProdutoId = x.ProdutoId,
-
-                    AdicionalSelecionado = x.AdicionalSelecionado.Select(y => new
+                    ComandaId = x.ComandaId,
+                    Data = x.Data,
+                    ItemSelecionado = x.ItemSelecionado.Select(y => new
                     {
                         Id = y.Id,
-                        ItemSelecionadoId = y.ItemSelecionadoId
+                        ProdutoId = y.ProdutoId,
+                        Quantidade = y.Quantidade,
+                        Observacoes = y.Observacoes
                     })
                 });
 
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = "Adicionais found";
+                response.Message = "Pedidos found";
                 response.Data = result;
 
                 return StatusCode(response.Code, response);
@@ -65,7 +64,7 @@ namespace FatecFoodAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Insert([FromBody] AdicionalRequest payload)
+        public ActionResult Insert([FromBody] PedidoRequest payload)
         {
             var response = new DefaultResponse()
             {
@@ -75,53 +74,46 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                if (!_context.Produtos.Any(c => c.Id == payload.ProdutoId))
+                if (!_context.Comandas.Any(c => c.Id == payload.ComandaId))
                 {
                     response.Code = (int)HttpStatusCode.BadRequest;
-                    response.Message = "Produto was not found";
+                    response.Message = "Comanda was not found";
 
                     return StatusCode(response.Code, response);
                 }
 
-                AdicionalModel model = new AdicionalModel()
+                PedidoModel model = new PedidoModel()
                 {
-                    Nome = payload.Nome,
-                    Ativo = payload.Ativo,
-                    Preco = payload.Preco,
-                    ProdutoId = payload.ProdutoId
+                    ComandaId = payload.ComandaId,
+                    Data = DateTime.Now
                 };
 
-                _context.Adicionais.Add(model);
+                _context.Pedidos.Add(model);
                 _context.SaveChanges();
 
-                response.Message = "Adicional was successfully inserted";
+                response.Message = "Pedido was successfully inserted";
                 response.Code = (int)HttpStatusCode.OK;
 
                 return StatusCode(response.Code, response);
             }
             catch (Exception err)
             {
-                response.Error = err.Message;
-                response.Message = "An error occurred while trying to insert a new Adicional";
+                response.Error = err;
+                response.Message = "An error occurred while trying to insert a new Pedido";
 
                 return StatusCode(response.Code, response);
             }
         }
 
         [HttpPut]
-        public ActionResult Update([FromQuery] int id, [FromBody] AdicionalRequest payload)
+        public ActionResult Update([FromQuery] int id, [FromBody] PedidoRequest payload)
         {
-            var adicional = _context.Adicionais.FirstOrDefault(a => a.Id == id);
+            var pedido = _context.Pedidos.FirstOrDefault(c => c.Id == id);
 
-            if (adicional == null)
+            if (pedido == null)
             {
-                return StatusCode(404, "Adicional not found");
+                return StatusCode(404, "Pedido not found");
             }
-
-            adicional.Nome = payload.Nome;
-            adicional.Ativo = payload.Ativo;
-            adicional.Preco = payload.Preco;
-            adicional.ProdutoId = payload.ProdutoId;
 
             _context.SaveChanges();
 
@@ -131,21 +123,21 @@ namespace FatecFoodAPI.Controllers
         [HttpDelete]
         public ActionResult Delete([FromQuery] int id)
         {
-            var adicional = _context.Adicionais.FirstOrDefault(a => a.Id == id);
+            var pedido = _context.Pedidos.FirstOrDefault(c => c.Id == id);
 
-            if (adicional == null)
+            if (pedido == null)
             {
-                return StatusCode(404, "Adicional not found");
+                return StatusCode(404, "Pedido not found");
             }
 
-            _context.Adicionais.Remove(adicional);
+            _context.Pedidos.Remove(pedido);
             _context.SaveChanges();
 
-            return StatusCode(200, "Adicional removed");
+            return StatusCode(200, "Pedido removed");
         }
 
-        [HttpGet("Produto")]
-        public ActionResult Produto([FromQuery] int id)
+        [HttpGet("Comanda")]
+        public ActionResult Comanda([FromQuery] int id)
         {
             var response = new DefaultResponse()
             {
@@ -155,33 +147,32 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var query = _context.Adicionais
-                                .Where(a => a.ProdutoId == id)
-                                .Include(x => x.AdicionalSelecionado)
+                var query = _context.Pedidos
+                                .Where(a => a.ComandaId == id)
+                                .Include(x => x.ItemSelecionado)
                                 .ToList();
 
                 if (query == null)
                 {
-                    return StatusCode(404, "Adicional not found");
+                    return StatusCode(404, "Pedido not found");
                 }
 
                 var result = query.Select(x => new
                 {
                     Id = x.Id,
-                    Nome = x.Nome,
-                    Ativo = x.Ativo,
-                    Preco = x.Preco,
-                    ProdutoId = x.ProdutoId,
-
-                    AdicionalSelecionado = x.AdicionalSelecionado.Select(y => new
+                    ComandaId = x.ComandaId,
+                    Data = x.Data,
+                    ItemSelecionado = x.ItemSelecionado.Select(y => new
                     {
                         Id = y.Id,
-                        ItemSelecionadoId = y.ItemSelecionadoId
+                        ProdutoId = y.ProdutoId,
+                        Quantidade = y.Quantidade,
+                        Observacoes = y.Observacoes
                     })
                 });
 
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = "Adicionais found";
+                response.Message = "Pedidos found";
                 response.Data = result;
 
                 return StatusCode(response.Code, response);
@@ -206,33 +197,32 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var query = _context.Adicionais
+                var query = _context.Pedidos
                                 .Where(x => x.Id == id)
-                                .Include(x => x.AdicionalSelecionado)
+                                .Include(x => x.ItemSelecionado)
                                 .ToList();
 
                 if (query == null)
                 {
-                    return StatusCode(404, "Adicional not found");
+                    return StatusCode(404, "Pedido not found");
                 }
 
                 var result = query.Select(x => new
                 {
                     Id = x.Id,
-                    Nome = x.Nome,
-                    Ativo = x.Ativo,
-                    Preco = x.Preco,
-                    ProdutoId = x.ProdutoId,
-
-                    AdicionalSelecionado = x.AdicionalSelecionado.Select(y => new
+                    ComandaId = x.ComandaId,
+                    Data = x.Data,
+                    ItemSelecionado = x.ItemSelecionado.Select(y => new
                     {
                         Id = y.Id,
-                        ItemSelecionadoId = y.ItemSelecionadoId
+                        ProdutoId = y.ProdutoId,
+                        Quantidade = y.Quantidade,
+                        Observacoes = y.Observacoes
                     })
                 });
 
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = "Adicionais found";
+                response.Message = "Pedidos found";
                 response.Data = result;
 
                 return StatusCode(response.Code, response);

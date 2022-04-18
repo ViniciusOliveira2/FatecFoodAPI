@@ -106,5 +106,21 @@ namespace FatecFoodAPI.Controllers
 
             return StatusCode(200, "ItemSelecionado removed");
         }
+
+        [HttpGet("ItemSelecionado")]
+        public ActionResult ItemSelecionado([FromQuery] int id)
+        {
+            var code = 200;
+            var data = _context.AdicionaisSelecionados
+                            .Where(a => a.ItemSelecionadoId == id)
+                            .ToList();
+
+            if (data == null)
+            {
+                return StatusCode(404, "AdicionalSelecionado not found");
+            }
+
+            return StatusCode(code, data);
+        }
     }
 }

@@ -168,6 +168,106 @@ namespace FatecFoodAPI.Controllers
 
             return File(stream, "image/png");
         }
-            
+
+        [HttpGet("Categoria")]
+        public ActionResult Categoria([FromQuery] int id)
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var query = _context.Produtos
+                    .Where(a => a.CategoriaId == id)
+                    .Include(x => x.Adicional)
+                    .ToList();
+
+                if (query == null)
+                {
+                    return StatusCode(404, "Produto not found");
+                }
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Preco = x.Preco,
+                    Ativo = x.Ativo,
+                    Foto = "/Produto/Image?Id=" + x.Id,
+                    Adicional = x.Adicional.Select(y => new
+                    {
+                        Id = y.Id,
+                        Nome = y.Nome,
+                        Ativo = y.Ativo,
+                        Preco = y.Preco
+                    })
+                });
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Produtos found.";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
+        }
+        [HttpGet("Individual")]
+        public ActionResult Individual([FromQuery] int id)
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var query = _context.Produtos
+                    .Where(a => a.Id == id)
+                    .Include(x => x.Adicional)
+                    .ToList();
+
+                if (query == null)
+                {
+                    return StatusCode(404, "Produto not found");
+                }
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Preco = x.Preco,
+                    Ativo = x.Ativo,
+                    Foto = "/Produto/Image?Id=" + x.Id,
+                    Adicional = x.Adicional.Select(y => new
+                    {
+                        Id = y.Id,
+                        Nome = y.Nome,
+                        Ativo = y.Ativo,
+                        Preco = y.Preco
+                    })
+                });
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Produtos found.";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
+        }
     }
 }

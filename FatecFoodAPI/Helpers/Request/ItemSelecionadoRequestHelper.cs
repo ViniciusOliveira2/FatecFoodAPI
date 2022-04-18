@@ -19,8 +19,8 @@ namespace FatecFoodAPI.Helpers.Request
         [MaxLength(100, ErrorMessage = "Nome must be less than 100 characters")]
         public string Observacoes { get; set; }
 
-        [ForeignKey("Comandas")]
-        [Required(ErrorMessage = "ComandaId is required")]
-        public int ComandaId { get; set; } 
+        [ForeignKey("Pedidos")]
+        [Required(ErrorMessage = "PedidoId is required")]
+        public int PedidoId { get; set; } 
     }
 }

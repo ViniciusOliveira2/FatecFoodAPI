@@ -17,10 +17,10 @@ namespace FatecFoodAPI.Models
 
         public string Observacoes { get; set; }
 
-        [ForeignKey("Comandas")]
-        public int ComandaId { get; set; }
+        [ForeignKey("Pedidos")]
+        public int PedidoId { get; set; }
 
-        public ComandaModel Comanda { get; set; }
+        public PedidoModel Pedido { get; set; }
 
         public List<AdicionalSelecionadoModel> AdicionalSelecionado { get; set; }
     }

@@ -31,20 +31,17 @@ namespace FatecFoodAPI.Controllers
             try
             {
                 var query = _context.Comandas
-                    .Include(x => x.ItemSelecionado)
+                    .Include(x => x.Pedido)
                     .ToList();
 
                 var result = query.Select(x => new
                 {
                     Id = x.Id,
-                    NumComanda = x.NumComanda,
                     RestauranteId = x.RestauranteId,
-                    ItemSelecionado = x.ItemSelecionado.Select(y => new
+                    Pedido = x.Pedido.Select(y => new
                     {
                         Id = y.Id,
-                        ProdutoId = y.ProdutoId,
-                        Quantidade = y.Quantidade,
-                        Observacoes = y.Observacoes
+                        Data = y.Data
                     })
                 });
 
@@ -84,7 +81,6 @@ namespace FatecFoodAPI.Controllers
 
                 ComandaModel model = new ComandaModel()
                 {
-                    NumComanda = payload.NumComanda,
                     RestauranteId = payload.RestauranteId
                 };
 
@@ -114,8 +110,6 @@ namespace FatecFoodAPI.Controllers
                 return StatusCode(404, "Comanda not found");
             }
 
-            comanda.NumComanda = payload.NumComanda;
-
             _context.SaveChanges();
 
             return StatusCode(200, payload);
@@ -135,6 +129,53 @@ namespace FatecFoodAPI.Controllers
             _context.SaveChanges();
 
             return StatusCode(200, "Comanda removed");
+        }
+
+        [HttpGet("Individual")]
+        public ActionResult Individual([FromQuery] int id)
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var query = _context.Comandas
+                    .Where(a => a.Id == id)
+                    .Include(x => x.Pedido)
+                    .ToList();
+
+                if (query == null)
+                {
+                    return StatusCode(404, "Adicional not found");
+                }
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    RestauranteId = x.RestauranteId,
+                    Pedido = x.Pedido.Select(y => new
+                    {
+                        Id = y.Id,
+                        Data = y.Data
+                    })
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Comandas found";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
         }
     }
 }

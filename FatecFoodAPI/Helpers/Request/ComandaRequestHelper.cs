@@ -8,9 +8,6 @@ namespace FatecFoodAPI.Helpers.Request
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Numero Comanda is required")]
-        public int NumComanda { get; set; }
-
         [ForeignKey("Restaurantes")]
         [Required(ErrorMessage = "RestauranteId is required")]
         public int RestauranteId { get; set; }

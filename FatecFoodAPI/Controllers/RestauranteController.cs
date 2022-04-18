@@ -48,8 +48,7 @@ namespace FatecFoodAPI.Controllers
                     }),
                     Comandas = x.Comandas.Select(z => new
                     {
-                        Id = z.Id,
-                        NumComanda = z.NumComanda
+                        Id = z.Id
                     })
                 });
 

@@ -27,5 +27,7 @@ namespace FatecFoodAPI.Database
 
         public DbSet<BancoImagemModel> BancoImagens { get; set; }
 
+        public DbSet<PedidoModel> Pedidos { get; set; }
+
     }
 }
