@@ -163,15 +163,17 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
+                var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(p => p.Id == id);
+
+                if (itemSelecionado == null)
+                {
+                    return StatusCode(404, "ItemSelecionado not found");
+                }
+
                 var query = _context.ItensSelecionados
                     .Where(a => a.PedidoId == id)
                     .Include(x => x.AdicionalSelecionado)
                     .ToList();
-
-                if (query == null)
-                {
-                    return StatusCode(404, "ItemSelecionado not found");
-                }
 
                 var result = query.Select(x => new
                 {

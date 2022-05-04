@@ -177,15 +177,17 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
+                var categoria = _context.Categorias.FirstOrDefault(p => p.Id == id);
+
+                if (categoria == null)
+                {
+                    return StatusCode(404, "Categoria not found");
+                }
+
                 var query = _context.Categorias
                     .Where(c => c.Id == id)
                     .Include(x => x.Produtos)
                     .ToList();
-
-                if (query == null)
-                {
-                    return StatusCode(404, "Adicional not found");
-                }
 
                 var result = query.Select(x => new
                 {

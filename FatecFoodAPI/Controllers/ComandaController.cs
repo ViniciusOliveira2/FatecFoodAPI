@@ -142,15 +142,17 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
+                var comanda = _context.Comandas.FirstOrDefault(p => p.Id == id);
+
+                if (comanda == null)
+                {
+                    return StatusCode(404, "Comanda not found");
+                }
+
                 var query = _context.Comandas
                     .Where(a => a.Id == id)
                     .Include(x => x.Pedido)
                     .ToList();
-
-                if (query == null)
-                {
-                    return StatusCode(404, "Adicional not found");
-                }
 
                 var result = query.Select(x => new
                 {

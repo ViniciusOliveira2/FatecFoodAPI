@@ -155,15 +155,17 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
+                var produto = _context.Produtos.FirstOrDefault(p => p.Id == id);
+
+                if (produto == null)
+                {
+                    return StatusCode(404, "Produto not found");
+                }
+
                 var query = _context.Adicionais
                                 .Where(a => a.ProdutoId == id)
                                 .Include(x => x.AdicionalSelecionado)
                                 .ToList();
-
-                if (query == null)
-                {
-                    return StatusCode(404, "Adicional not found");
-                }
 
                 var result = query.Select(x => new
                 {
@@ -206,15 +208,17 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
+                var adicional = _context.Adicionais.FirstOrDefault(p => p.Id == id);
+
+                if (adicional == null)
+                {
+                    return StatusCode(404, "Adicional not found");
+                }
+
                 var query = _context.Adicionais
                                 .Where(x => x.Id == id)
                                 .Include(x => x.AdicionalSelecionado)
                                 .ToList();
-
-                if (query == null)
-                {
-                    return StatusCode(404, "Adicional not found");
-                }
 
                 var result = query.Select(x => new
                 {
