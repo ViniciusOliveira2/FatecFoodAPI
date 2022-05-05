@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FatecFoodAPI.Migrations
 {
     [DbContext(typeof(FatecFoodAPIContext))]
-    [Migration("20220418032836_InitialCreate")]
+    [Migration("20220505160642_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -191,6 +191,10 @@ namespace FatecFoodAPI.Migrations
 
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Imagem")
                         .IsRequired()

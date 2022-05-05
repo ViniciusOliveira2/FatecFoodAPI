@@ -106,6 +106,8 @@ namespace FatecFoodAPI.Migrations
                     CategoriaId = table.Column<int>(type: "int", nullable: false),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Imagem = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Descricao = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

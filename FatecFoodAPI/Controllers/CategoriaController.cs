@@ -47,6 +47,7 @@ namespace FatecFoodAPI.Controllers
                         Nome = y.Nome,
                         Preco = y.Preco,
                         Ativo = y.Ativo,
+                        Descricao = y.Descricao,
                         Foto = "/Produto/Image?Id=" + y.Id
                     })
                 });
@@ -202,6 +203,7 @@ namespace FatecFoodAPI.Controllers
                         Nome = y.Nome,
                         Preco = y.Preco,
                         Ativo = y.Ativo,
+                        Descricao = y.Descricao,
                         Foto = "/Produto/Image?Id=" + x.Id
                     })
                 });
