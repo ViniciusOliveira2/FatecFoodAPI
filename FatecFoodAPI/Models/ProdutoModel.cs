@@ -26,5 +26,7 @@ namespace FatecFoodAPI.Models
         public string Imagem { get; set; }
 
         public string Descricao { get; set; }
+
+        public int Porcao { get; set; }
     }
 }

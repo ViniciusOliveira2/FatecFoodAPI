@@ -202,6 +202,9 @@ namespace FatecFoodAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("Porcao")
+                        .HasColumnType("int");
+
                     b.Property<double>("Preco")
                         .HasColumnType("double");
 
@@ -217,6 +220,10 @@ namespace FatecFoodAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("Imagem")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Login")
                         .IsRequired()

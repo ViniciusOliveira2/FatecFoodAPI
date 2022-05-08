@@ -44,6 +44,7 @@ namespace FatecFoodAPI.Controllers
                     Foto = "/Produto/Image?Id=" + x.Id,
                     CategoriaId = x.CategoriaId,
                     Descricao = x.Descricao,
+                    Porcao = x.Porcao,
                     Adicional = x.Adicional.Select(y => new
                     {
                         Id = y.Id,
@@ -93,7 +94,8 @@ namespace FatecFoodAPI.Controllers
                     Ativo = payload.Ativo,
                     CategoriaId = payload.CategoriaId,
                     Imagem = payload.Imagem,
-                    Descricao = payload.Descricao
+                    Descricao = payload.Descricao,
+                    Porcao = payload.Porcao
                 };
 
                 _context.Produtos.Add(model);
@@ -129,6 +131,7 @@ namespace FatecFoodAPI.Controllers
             produto.Ativo = payload.Ativo;
             produto.Imagem = payload.Imagem;
             produto.Descricao = payload.Descricao;
+            produto.Porcao = payload.Porcao;
 
             _context.SaveChanges();
 
@@ -205,6 +208,7 @@ namespace FatecFoodAPI.Controllers
                     Foto = "/Produto/Image?Id=" + x.Id,
                     CategoriaId = x.CategoriaId,
                     Descricao = x.Descricao,
+                    Porcao = x.Porcao,
                     Adicional = x.Adicional.Select(y => new
                     {
                         Id = y.Id,
@@ -259,6 +263,7 @@ namespace FatecFoodAPI.Controllers
                     Foto = "/Produto/Image?Id=" + x.Id,
                     CategoriaId = x.CategoriaId,
                     Descricao = x.Descricao,
+                    Porcao = x.Porcao,
                     Adicional = x.Adicional.Select(y => new
                     {
                         Id = y.Id,

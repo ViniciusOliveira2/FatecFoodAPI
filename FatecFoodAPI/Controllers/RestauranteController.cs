@@ -41,6 +41,7 @@ namespace FatecFoodAPI.Controllers
                     Login = x.Login,
                     Senha = x.Senha,
                     Nome = x.Nome,
+                    Foto = "/Restaurante/Image?Id=" + x.Id,
                     Categorias = x.Categorias.Select(y => new
                     {
                         Id = y.Id,
@@ -134,6 +135,24 @@ namespace FatecFoodAPI.Controllers
             _context.SaveChanges();
 
             return StatusCode(200, "Restaurante removed");
+        }
+
+        [HttpGet("Image")]
+        public ActionResult Image([FromQuery] int id)
+        {
+            var restaurante = _context.Restaurantes.FirstOrDefault(r => r.Id == id);
+
+            if (restaurante == null)
+            {
+                return StatusCode(404, "Restaurante not found");
+            }
+
+            var base64 = restaurante.Imagem;
+            base64 = base64.Replace("data:image/jpeg;base64,", "").Replace("data:image/png;base64,", "");
+            var bytes = Convert.FromBase64String(base64);
+            Stream stream = new MemoryStream(bytes);
+
+            return File(stream, "image/png");
         }
     }
 }

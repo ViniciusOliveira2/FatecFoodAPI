@@ -26,5 +26,7 @@ namespace FatecFoodAPI.Helpers.Request
 
         [MaxLength(100, ErrorMessage = "Nome must be less than 100 characters")]
         public string Descricao { get; set; }
+
+        public int Porcao { get; set; }
     }
 }

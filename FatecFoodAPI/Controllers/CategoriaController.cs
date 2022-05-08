@@ -48,6 +48,7 @@ namespace FatecFoodAPI.Controllers
                         Preco = y.Preco,
                         Ativo = y.Ativo,
                         Descricao = y.Descricao,
+                        Porcao = y.Porcao,
                         Foto = "/Produto/Image?Id=" + y.Id
                     })
                 });
@@ -147,6 +148,62 @@ namespace FatecFoodAPI.Controllers
             return StatusCode(200, "Categoria removed");
         }
 
+        [HttpGet("Restaurante")]
+        public ActionResult Restaurante([FromQuery] int id)
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var restaurante = _context.Restaurantes.FirstOrDefault(r => r.Id == id);
+
+                if (restaurante == null)
+                {
+                    return StatusCode(404, "Restaurante not found");
+                }
+
+                var query = _context.Categorias
+                    .Where(a => a.RestauranteId == id)
+                    .Include(x => x.Produtos)
+                    .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Ativo = x.Ativo,
+                    Imagem = x.Imagem,
+                    RestauranteId = x.RestauranteId,
+                    Produtos = x.Produtos.Select(y => new
+                    {
+                        Id = y.Id,
+                        Nome = y.Nome,
+                        Preco = y.Preco,
+                        Ativo = y.Ativo,
+                        Descricao = y.Descricao,
+                        Porcao = y.Porcao,
+                        Foto = "/Produto/Image?Id=" + y.Id
+                    })
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Categorias found.";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            } catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
+        }
+
         [HttpGet("Individual")]
         public ActionResult Individual([FromQuery] int id)
         {
@@ -184,6 +241,7 @@ namespace FatecFoodAPI.Controllers
                         Preco = y.Preco,
                         Ativo = y.Ativo,
                         Descricao = y.Descricao,
+                        Porcao = y.Porcao,
                         Foto = "/Produto/Image?Id=" + x.Id
                     })
                 });
