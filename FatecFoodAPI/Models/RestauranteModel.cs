@@ -18,6 +18,6 @@ namespace FatecFoodAPI.Models
 
         public List<ComandaModel> Comandas { get; set; }
 
-        public string Imagem { get; set; }
+        public string? Imagem { get; set; }
     }
 }

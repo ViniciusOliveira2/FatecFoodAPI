@@ -24,7 +24,7 @@ namespace FatecFoodAPI.Controllers
         {
             var response = new DefaultResponse()
             {
-                Code = (int)HttpStatusCode.Unauthorized,
+                Code = (int) HttpStatusCode.Unauthorized,
                 Message = "User was not authorized"
             };
 
@@ -53,12 +53,13 @@ namespace FatecFoodAPI.Controllers
                     })
                 });
 
-                response.Code = (int)HttpStatusCode.OK;
+                response.Code = (int) HttpStatusCode.OK;
                 response.Message = "Restaurantes found";
                 response.Data = result;
 
                 return StatusCode(response.Code, response);
-            } catch (Exception ex)
+            } 
+            catch (Exception ex)
             {
                 response.Code = (int)HttpStatusCode.InternalServerError;
                 response.Message = ex.Message;
@@ -78,7 +79,7 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                RestauranteModel model = new RestauranteModel()
+                RestauranteModel model = new ()
                 {
                     Login = payload.Login,
                     Senha = payload.Senha,
