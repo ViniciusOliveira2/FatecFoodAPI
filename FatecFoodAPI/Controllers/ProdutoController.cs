@@ -286,5 +286,61 @@ namespace FatecFoodAPI.Controllers
                 return StatusCode(response.Code, response);
             }
         }
+
+        [HttpGet("Nome")]
+        public ActionResult Nome([FromQuery] string nome)
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var produto = _context.Produtos.FirstOrDefault(p => p.Nome == nome);
+
+                if (produto == null)
+                {
+                    return StatusCode(404, "Produto not found");
+                }
+
+                var query = _context.Produtos
+                    .Where(a => a.Nome == nome)
+                    .Include(x => x.Adicional)
+                    .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Preco = x.Preco,
+                    Ativo = x.Ativo,
+                    Foto = "/Produto/Image?Id=" + x.Id,
+                    CategoriaId = x.CategoriaId,
+                    Descricao = x.Descricao,
+                    Porcao = x.Porcao,
+                    Adicional = x.Adicional.Select(y => new
+                    {
+                        Id = y.Id,
+                        Nome = y.Nome,
+                        Ativo = y.Ativo,
+                        Preco = y.Preco
+                    })
+                });
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Produtos found.";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
+        }
     }
 }
