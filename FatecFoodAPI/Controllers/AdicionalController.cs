@@ -249,5 +249,54 @@ namespace FatecFoodAPI.Controllers
                 return StatusCode(response.Code, response);
             }
         }
+
+        [HttpGet("Nome")]
+        public ActionResult Nome([FromQuery] string? nome)
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var query = _context.Adicionais
+                    .Include(produto => produto.AdicionalSelecionado)
+                    .AsQueryable();
+
+                if (!string.IsNullOrEmpty(nome))
+                {
+                    query = query.Where(adicional => adicional.Nome.Contains(nome));
+                }
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Ativo = x.Ativo,
+                    Preco = x.Preco,
+                    ProdutoId = x.ProdutoId,
+
+                    AdicionalSelecionado = x.AdicionalSelecionado.Select(y => new
+                    {
+                        Id = y.Id,
+                        ItemSelecionadoId = y.ItemSelecionadoId
+                    })
+                });
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Adicionais found.";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
+        }
     }
 }

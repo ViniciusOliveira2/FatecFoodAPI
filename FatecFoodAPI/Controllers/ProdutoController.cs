@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Mime;
 using FatecFoodAPI.Database;
 using FatecFoodAPI.Helpers;
@@ -288,7 +289,7 @@ namespace FatecFoodAPI.Controllers
         }
 
         [HttpGet("Nome")]
-        public ActionResult Nome([FromQuery] string nome)
+        public ActionResult Nome([FromQuery] string? nome)
         {
             var response = new DefaultResponse()
             {
@@ -298,17 +299,14 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var produto = _context.Produtos.FirstOrDefault(p => p.Nome == nome);
-
-                if (produto == null)
-                {
-                    return StatusCode(404, "Produto not found");
-                }
-
                 var query = _context.Produtos
-                    .Where(a => a.Nome == nome)
-                    .Include(x => x.Adicional)
-                    .ToList();
+                    .Include(produto => produto.Adicional)
+                    .AsQueryable();
+
+                if(!string.IsNullOrEmpty(nome))
+                {
+                    query = query.Where(produto => produto.Nome.Contains(nome));
+                }
 
                 var result = query.Select(x => new
                 {

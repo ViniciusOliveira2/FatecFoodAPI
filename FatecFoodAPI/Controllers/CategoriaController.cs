@@ -242,7 +242,7 @@ namespace FatecFoodAPI.Controllers
                         Ativo = y.Ativo,
                         Descricao = y.Descricao,
                         Porcao = y.Porcao,
-                        Foto = "/Produto/Image?Id=" + x.Id
+                        Foto = "/Produto/Image?Id=" + y.Id
                     })
                 });
 
@@ -252,6 +252,58 @@ namespace FatecFoodAPI.Controllers
 
                 return StatusCode(response.Code, response);
 
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
+        }
+
+        [HttpGet("Nome")]
+        public ActionResult Nome([FromQuery] string? nome)
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var query = _context.Categorias
+                    .Include(categoria => categoria.Produtos)
+                    .AsQueryable();
+
+                if (!string.IsNullOrEmpty(nome))
+                {
+                    query = query.Where(categoria => categoria.Nome.Contains(nome));
+                }
+                var result = query.ToList().Select(x => new
+                {
+                    x.Id,
+                    Nome = x.Nome,
+                    Ativo = x.Ativo,
+                    Imagem = x.Imagem,
+                    RestauranteId = x.RestauranteId,
+                    Produtos = x.Produtos.Select(y => new
+                    {
+                        Id = y.Id,
+                        Nome = y.Nome,
+                        Preco = y.Preco,
+                        Ativo = y.Ativo,
+                        Descricao = y.Descricao,
+                        Porcao = y.Porcao,
+                        Foto = "/Produto/Image?Id=" + y.Id
+                    })
+                });
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Categorias found.";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
             }
             catch (Exception ex)
             {
