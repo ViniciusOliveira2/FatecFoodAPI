@@ -117,6 +117,7 @@ namespace FatecFoodAPI.Controllers
             restaurante.Login = payload.Login;
             restaurante.Senha = payload.Senha;
             restaurante.Nome = payload.Nome;
+            restaurante.Imagem = payload.Imagem;
 
             _context.SaveChanges();
 
