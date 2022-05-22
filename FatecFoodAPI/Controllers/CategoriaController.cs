@@ -99,7 +99,7 @@ namespace FatecFoodAPI.Controllers
                 _context.Categorias.Add(model);
                 _context.SaveChanges();
 
-                response.Message = "Categoria was successfully inserted";
+                response.Message = "Categoria Id " + model.Id + " was successfully inserted";
                 response.Code = (int) HttpStatusCode.OK;
 
                 return StatusCode(response.Code, response);

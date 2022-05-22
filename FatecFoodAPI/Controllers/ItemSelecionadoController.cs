@@ -103,7 +103,7 @@ namespace FatecFoodAPI.Controllers
                 await _context.SaveChangesAsync();
 
                 response.Code = (int)HttpStatusCode.OK;
-                response.Message = "ItemSelecionado was successfully inserted";
+                response.Message = "ItemSelecionado Id " + model.Id + " was successfully inserted";
                 response.Data = model;
                 
                 return StatusCode(response.Code, response);

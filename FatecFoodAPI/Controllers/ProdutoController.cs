@@ -102,7 +102,7 @@ namespace FatecFoodAPI.Controllers
                 _context.Produtos.Add(model);
                 _context.SaveChanges();
 
-                response.Message = "Produto was successfully inserted";
+                response.Message = "Produto Id " + model.Id + " was successfully inserted";
                 response.Code = (int) HttpStatusCode.OK;
 
                 return StatusCode(response.Code, response);

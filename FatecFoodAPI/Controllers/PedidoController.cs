@@ -91,7 +91,7 @@ namespace FatecFoodAPI.Controllers
                 _context.Pedidos.Add(model);
                 _context.SaveChanges();
 
-                response.Message = "Pedido was successfully inserted";
+                response.Message = "Pedido Id " + model.Id + " was successfully inserted";
                 response.Code = (int)HttpStatusCode.OK;
 
                 return StatusCode(response.Code, response);

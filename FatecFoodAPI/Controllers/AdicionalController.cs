@@ -94,7 +94,7 @@ namespace FatecFoodAPI.Controllers
                 _context.Adicionais.Add(model);
                 _context.SaveChanges();
 
-                response.Message = "Adicional was successfully inserted";
+                response.Message = "Adicional Id " + model.Id + " was successfully inserted";
                 response.Code = (int)HttpStatusCode.OK;
 
                 return StatusCode(response.Code, response);
