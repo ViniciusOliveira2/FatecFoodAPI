@@ -83,7 +83,8 @@ namespace FatecFoodAPI.Controllers
                 {
                     Login = payload.Login,
                     Senha = payload.Senha,
-                    Nome = payload.Nome
+                    Nome = payload.Nome,
+                    Imagem = payload.Imagem
                 };
 
                 _context.Restaurantes.Add(model);
@@ -141,13 +142,17 @@ namespace FatecFoodAPI.Controllers
         [HttpGet("Image")]
         public ActionResult Image([FromQuery] int id)
         {
-            var restaurante = _context.Restaurantes.FirstOrDefault(r => r.Id == id);
+            var restaurante = _context.Restaurantes.FirstOrDefault(p => p.Id == id);
+
+
+
 
             if (restaurante == null)
             {
                 return StatusCode(404, "Restaurante not found");
             }
 
+            int teste = restaurante.Id;
             var base64 = restaurante.Imagem;
             base64 = base64.Replace("data:image/jpeg;base64,", "").Replace("data:image/png;base64,", "");
             var bytes = Convert.FromBase64String(base64);
