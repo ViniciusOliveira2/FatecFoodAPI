@@ -54,10 +54,10 @@ namespace FatecFoodAPI.Controllers
                     return StatusCode(response.Code, response);
                 }
 
-                AdicionalSelecionadoModel model = new AdicionalSelecionadoModel()
+                var model = new AdicionalSelecionadoModel()
                 {
                     ItemSelecionadoId = payload.ItemSelecionadoId,
-                    AdicionalId = payload.AdicionalId,
+                    AdicionalId = payload.AdicionalId
                 };
 
                 _context.AdicionaisSelecionados.Add(model);
@@ -67,9 +67,10 @@ namespace FatecFoodAPI.Controllers
                 response.Code = (int)HttpStatusCode.OK;
 
                 return StatusCode(response.Code, response);
-            } catch (Exception err)
+            } 
+            catch (Exception err)
             {
-                response.Error = err;
+                response.Error = err.Message;
                 response.Message = "An error occurred while trying to insert a new AdicionalSelecionado";
 
                 return StatusCode(response.Code, response);

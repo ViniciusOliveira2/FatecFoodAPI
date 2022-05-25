@@ -16,6 +16,6 @@ namespace FatecFoodAPI.Models
         [ForeignKey("Adicionais")]
         public int AdicionalId { get; set; }
 
-        public AdicionalModel AdicionalModel { get; set; }
+        public AdicionalModel Adicional { get; set; }
     }
 }
