@@ -163,11 +163,11 @@ namespace FatecFoodAPI.Controllers
 
             try
             {
-                var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(p => p.Id == id);
+                var pedido = _context.Pedidos.FirstOrDefault(p => p.Id == id);
 
-                if (itemSelecionado == null)
+                if (pedido == null)
                 {
-                    return StatusCode(404, "ItemSelecionado not found");
+                    return StatusCode(404, "Pedido not found");
                 }
 
                 var query = _context.ItensSelecionados

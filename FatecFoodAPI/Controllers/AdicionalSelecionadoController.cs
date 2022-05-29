@@ -111,9 +111,9 @@ namespace FatecFoodAPI.Controllers
         [HttpGet("ItemSelecionado")]
         public ActionResult ItemSelecionado([FromQuery] int id)
         {
-            var adicionalSelecionado = _context.AdicionaisSelecionados.FirstOrDefault(p => p.Id == id);
+            var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(p => p.Id == id);
 
-            if (adicionalSelecionado == null)
+            if (itemSelecionado == null)
             {
                 return StatusCode(404, "AdicioanlSelecionado not found");
             }

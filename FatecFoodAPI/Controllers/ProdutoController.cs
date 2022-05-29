@@ -232,6 +232,7 @@ namespace FatecFoodAPI.Controllers
                 return StatusCode(response.Code, response);
             }
         }
+
         [HttpGet("Individual")]
         public ActionResult Individual([FromQuery] int id)
         {

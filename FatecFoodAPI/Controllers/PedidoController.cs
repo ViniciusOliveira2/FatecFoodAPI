@@ -85,7 +85,7 @@ namespace FatecFoodAPI.Controllers
                 PedidoModel model = new PedidoModel()
                 {
                     ComandaId = payload.ComandaId,
-                    Data = DateTime.Now
+                    Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))
                 };
 
                 _context.Pedidos.Add(model);
