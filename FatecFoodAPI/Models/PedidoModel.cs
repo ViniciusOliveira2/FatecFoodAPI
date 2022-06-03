@@ -10,6 +10,8 @@ namespace FatecFoodAPI.Models
 
         public DateTime Data { get; set; }
 
+        public bool Entregue { get; set; }
+
         [ForeignKey("Comandas")]
         public int ComandaId { get; set; }
 

@@ -39,6 +39,7 @@ namespace FatecFoodAPI.Controllers
                     Id = x.Id,
                     ComandaId = x.ComandaId,
                     Data = x.Data,
+                    Entregue = x.Entregue,
                     ItemSelecionado = x.ItemSelecionado.Select(y => new
                     {
                         Id = y.Id,
@@ -85,7 +86,8 @@ namespace FatecFoodAPI.Controllers
                 PedidoModel model = new PedidoModel()
                 {
                     ComandaId = payload.ComandaId,
-                    Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))
+                    Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+                    Entregue = payload.Entregue
                 };
 
                 _context.Pedidos.Add(model);
@@ -114,6 +116,8 @@ namespace FatecFoodAPI.Controllers
             {
                 return StatusCode(404, "Pedido not found");
             }
+
+            pedido.Entregue = payload.Entregue;
 
             _context.SaveChanges();
 
@@ -162,6 +166,7 @@ namespace FatecFoodAPI.Controllers
                     Id = x.Id,
                     ComandaId = x.ComandaId,
                     Data = x.Data,
+                    Entregue = x.Entregue,
                     ItemSelecionado = x.ItemSelecionado.Select(y => new
                     {
                         Id = y.Id,
@@ -212,6 +217,109 @@ namespace FatecFoodAPI.Controllers
                     Id = x.Id,
                     ComandaId = x.ComandaId,
                     Data = x.Data,
+                    Entregue = x.Entregue,
+                    ItemSelecionado = x.ItemSelecionado.Select(y => new
+                    {
+                        Id = y.Id,
+                        ProdutoId = y.ProdutoId,
+                        Quantidade = y.Quantidade,
+                        Observacoes = y.Observacoes
+                    })
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Pedidos found";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
+        }
+
+        [HttpGet("Entregue")]
+        public ActionResult Entregue()
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var query = _context.Pedidos
+                                .Where(x => x.Entregue == true)
+                                .Include(x => x.ItemSelecionado)
+                                .ToList();
+
+                if (query == null)
+                {
+                    return StatusCode(404, "Pedido not found");
+                }
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    ComandaId = x.ComandaId,
+                    Data = x.Data,
+                    Entregue = x.Entregue,
+                    ItemSelecionado = x.ItemSelecionado.Select(y => new
+                    {
+                        Id = y.Id,
+                        ProdutoId = y.ProdutoId,
+                        Quantidade = y.Quantidade,
+                        Observacoes = y.Observacoes
+                    })
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "Pedidos found";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
+        }
+
+        [HttpGet("NaoEntregue")]
+        public ActionResult NaoEntregue()
+        {
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var query = _context.Pedidos
+                                .Where(x => x.Entregue == false)
+                                .Include(x => x.ItemSelecionado)
+                                .ToList();
+
+                if (query == null)
+                {
+                    return StatusCode(404, "Pedido not found");
+                }
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    ComandaId = x.ComandaId,
+                    Data = x.Data,
+                    Entregue = x.Entregue,
                     ItemSelecionado = x.ItemSelecionado.Select(y => new
                     {
                         Id = y.Id,

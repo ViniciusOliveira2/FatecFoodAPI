@@ -10,6 +10,8 @@ namespace FatecFoodAPI.Helpers.Request
 
         public DateTime Data { get; set; }
 
+        public bool Entregue { get; set; }
+
         [ForeignKey("Comandas")]
         [Required(ErrorMessage = "ComandaId is required")]
         public int ComandaId { get; set; }

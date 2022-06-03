@@ -41,7 +41,8 @@ namespace FatecFoodAPI.Controllers
                     Pedido = x.Pedido.Select(y => new
                     {
                         Id = y.Id,
-                        Data = y.Data
+                        Data = y.Data,
+                        Entregue = y.Entregue
                     })
                 });
 
@@ -161,7 +162,8 @@ namespace FatecFoodAPI.Controllers
                     Pedido = x.Pedido.Select(y => new
                     {
                         Id = y.Id,
-                        Data = y.Data
+                        Data = y.Data,
+                        Entregue = y.Entregue
                     })
                 });
 
