@@ -12,6 +12,8 @@ namespace FatecFoodAPI.Models
 
         public bool Entregue { get; set; }
 
+        public double Total { get; set; }
+
         [ForeignKey("Comandas")]
         public int ComandaId { get; set; }
 

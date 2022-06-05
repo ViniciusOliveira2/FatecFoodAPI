@@ -3,6 +3,7 @@ using System;
 using FatecFoodAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FatecFoodAPI.Migrations
 {
     [DbContext(typeof(FatecFoodAPIContext))]
-    partial class FatecFoodAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20220605204006_Total")]
+    partial class Total
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +44,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("Adicionais", (string)null);
+                    b.ToTable("Adicionais");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.AdicionalSelecionadoModel", b =>
@@ -63,7 +65,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("ItemSelecionadoId");
 
-                    b.ToTable("AdicionaisSelecionados", (string)null);
+                    b.ToTable("AdicionaisSelecionados");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.BancoImagemModel", b =>
@@ -82,7 +84,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BancoImagens", (string)null);
+                    b.ToTable("BancoImagens");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.CategoriaModel", b =>
@@ -109,7 +111,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("RestauranteId");
 
-                    b.ToTable("Categorias", (string)null);
+                    b.ToTable("Categorias");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.ComandaModel", b =>
@@ -125,7 +127,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("RestauranteId");
 
-                    b.ToTable("Comandas", (string)null);
+                    b.ToTable("Comandas");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.ItemSelecionadoModel", b =>
@@ -153,7 +155,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("ItensSelecionados", (string)null);
+                    b.ToTable("ItensSelecionados");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.PedidoModel", b =>
@@ -178,7 +180,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("Pedidos", (string)null);
+                    b.ToTable("Pedidos");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.ProdutoModel", b =>
@@ -215,7 +217,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasIndex("CategoriaId");
 
-                    b.ToTable("Produtos", (string)null);
+                    b.ToTable("Produtos");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.RestauranteModel", b =>
@@ -241,7 +243,7 @@ namespace FatecFoodAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurantes", (string)null);
+                    b.ToTable("Restaurantes");
                 });
 
             modelBuilder.Entity("FatecFoodAPI.Models.AdicionalModel", b =>

@@ -42,6 +42,7 @@ namespace FatecFoodAPI.Controllers
                     {
                         Id = y.Id,
                         Data = y.Data,
+                        Total = calculaPedidos(y.Id),
                         Entregue = y.Entregue
                     })
                 });
@@ -59,6 +60,40 @@ namespace FatecFoodAPI.Controllers
 
                 return StatusCode(response.Code, response);
             }
+        }
+        private double calculaPedidos(int id)
+        {
+            double total = 0;
+
+            var query = _context.ItensSelecionados
+                        .Where(x => x.PedidoId == id)
+                        .Include(x => x.AdicionalSelecionado)
+                        .Include(x => x.Produto)
+                        .ToList();
+
+            foreach (var a in query)
+            {
+                total += (a.Produto.Preco + calculaAdicionais(a.Id)) * a.Quantidade;
+            }
+
+            return total;
+        }
+
+        private double calculaAdicionais(int id)
+        {
+            double total = 0;
+
+            var query = _context.AdicionaisSelecionados
+                        .Where(x => x.ItemSelecionadoId == id)
+                        .Include(x => x.Adicional)
+                        .ToList();
+
+            foreach (var a in query)
+            {
+                total += a.Adicional.Preco;
+            }
+
+            return total;
         }
 
         [HttpPost]
@@ -163,6 +198,7 @@ namespace FatecFoodAPI.Controllers
                     {
                         Id = y.Id,
                         Data = y.Data,
+                        Total = calculaPedidos(y.Id),
                         Entregue = y.Entregue
                     })
                 });

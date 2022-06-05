@@ -12,6 +12,8 @@ namespace FatecFoodAPI.Helpers.Request
 
         public bool Entregue { get; set; }
 
+        public double Total { get; set; }
+
         [ForeignKey("Comandas")]
         [Required(ErrorMessage = "ComandaId is required")]
         public int ComandaId { get; set; }
