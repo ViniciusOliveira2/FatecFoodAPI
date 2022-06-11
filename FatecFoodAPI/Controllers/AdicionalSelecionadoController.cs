@@ -21,10 +21,40 @@ namespace FatecFoodAPI.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
-            var code = 200;
-            var data = _context.AdicionaisSelecionados.ToList();
+            var response = new DefaultResponse()
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
 
-            return StatusCode(code, data);
+            try
+            {
+                
+
+                var query = _context.AdicionaisSelecionados
+                        
+                        .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    ItemSelecionadoId = x.ItemSelecionadoId,
+                    AdicionalId = x.AdicionalId
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "AdicionalSelecionado found";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
+
+                return StatusCode(response.Code, response);
+            }
         }
 
         [HttpPost]
@@ -111,19 +141,45 @@ namespace FatecFoodAPI.Controllers
         [HttpGet("ItemSelecionado")]
         public ActionResult ItemSelecionado([FromQuery] int id)
         {
-            var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(p => p.Id == id);
-
-            if (itemSelecionado == null)
+            var response = new DefaultResponse()
             {
-                return StatusCode(404, "AdicioanlSelecionado not found");
+                Code = (int)HttpStatusCode.Unauthorized,
+                Message = "User was not authorized"
+            };
+
+            try
+            {
+                var itemSelecionado = _context.ItensSelecionados.FirstOrDefault(p => p.Id == id);
+
+                if (itemSelecionado == null)
+                {
+                    return StatusCode(404, "ItemSelecionado was not found.");
+                }
+
+                var query = _context.AdicionaisSelecionados
+                        .Where(a => a.ItemSelecionadoId == id)
+                        .ToList();
+
+                var result = query.Select(x => new
+                {
+                    Id = x.Id,
+                    ItemSelecionadoId = x.ItemSelecionadoId,
+                    AdicionalId = x.AdicionalId
+                });
+
+                response.Code = (int)HttpStatusCode.OK;
+                response.Message = "AdicionalSelecionado found";
+                response.Data = result;
+
+                return StatusCode(response.Code, response);
             }
+            catch (Exception ex)
+            {
+                response.Code = (int)HttpStatusCode.InternalServerError;
+                response.Message = ex.Message;
 
-            var code = 200;
-            var data = _context.AdicionaisSelecionados
-                            .Where(a => a.ItemSelecionadoId == id)
-                            .ToList();
-
-            return StatusCode(code, data);
+                return StatusCode(response.Code, response);
+            }
         }
     }
 }
